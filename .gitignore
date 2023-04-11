@@ -5,3 +5,7 @@ penv/
 airflow_settings.yaml
 __pycache__/
 astro
+include/flights.parquet
+include/tmp/
+duck_files
+notes.txt

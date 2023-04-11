@@ -1,7 +1,6 @@
 # Astro Runtime includes the following pre-installed providers packages: https://docs.astronomer.io/astro/runtime-image-architecture#provider-packages
-duckdb
-astro-sdk-python[duckdb]
-pandas
-fsspec
+duckdb==0.7.1
+astro-sdk-python[duckdb]==1.5.3
+pandas==1.5.3
+fsspec==2023.3.0
 s3fs==2023.3.0
-aiobotocore==2.4.2
