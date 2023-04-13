@@ -1,49 +1,44 @@
-Overview
-========
+## Using DuckDB with Apache Airflow
 
-Welcome to Astronomer! This project was generated after you ran 'astro dev init' using the Astronomer CLI. This readme describes the contents of the project, as well as how to run Apache Airflow on your local machine.
+This repo has the code that goes with [this blog post](https://medium.com/....) on **How to Best Use DuckDB with Apache Airflow**. The blog post contains the important details on the process, this README will show you how to get the project up and running.
 
-Project Contents
-================
+![blog post](https://unsplash.com/photos/59yg_LpcvzQ/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjgxMzgyNzQ0&force=true&w=1920)
 
-Your Astro project contains the following files and folders:
+There are some specific prerequisites you need to run this repo:
+1. A Docker Engine. [Docker Desktop](https://www.docker.com) or [Colima](https://github.com/abiosoft/colima) both work with the Astro CLI.
+2. The [Astro CLI](https://docs.astronomer.io/astro/cli/overview)
+3. The data files need to be upload to an S3 (or S3 compliant service like Minio) that you have access to.  
 
-- dags: This folder contains the Python files for your Airflow DAGs. By default, this directory includes two example DAGs:
-    - `example_dag_basic`: This DAG shows a simple ETL data pipeline example with three TaskFlow API tasks that run daily.
-    - `example_dag_advanced`: This advanced DAG showcases a variety of Airflow features like branching, Jinja templates, task groups and several Airflow operators.
-- Dockerfile: This file contains a versioned Astro Runtime Docker image that provides a differentiated Airflow experience. If you want to execute other commands or overrides at runtime, specify them here.
-- include: This folder contains any additional files that you want to include as part of your project. It is empty by default.
-- packages.txt: Install OS-level packages needed for your project by adding them to this file. It is empty by default.
-- requirements.txt: Install Python packages needed for your project by adding them to this file. It is empty by default.
-- plugins: Add custom or community plugins for your project to this file. It is empty by default.
-- airflow_settings.yaml: Use this local-only file to specify Airflow Connections, Variables, and Pools instead of entering them in the Airflow UI as you develop DAGs in this project.
+The files needed are hosted on the [transtats site](https://transtats.bts.gov/PREZIP/) and the file names looks like: `On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2002_1.zip`. This is the On Time Reporting data for flights in the US. The `fetch_files.sh` script included in this repo will fetch and unzip the files for 2018 - 2022. Run the script somewhere locally and take a break from doing computer things while it runs. You then need to upload the csv files to a folder on an S3 bucket somewhere.
 
-Deploy Your Project Locally
-===========================
+You need to then update the `MY_S3_BUCKET` variable in both DAG files (`dags/duckdb_process_dag.py` and `dags/duckdb_test_dag.py`) with your S3 path. This is near the top of file, so it will be easy to find. Change this line:
 
-1. Start Airflow on your local machine by running 'astro dev start'.
+> ```MY_S3_BUCKET = 's3://jf-ml-data/flight_data/'```
 
-This command will spin up 4 Docker containers on your machine, each for a different Airflow component:
+to you S3 bucket's path. Once that's done, you are good to go. 
 
-- Postgres: Airflow's Metadata Database
-- Webserver: The Airflow component responsible for rendering the Airflow UI
-- Scheduler: The Airflow component responsible for monitoring and triggering tasks
-- Triggerer: The Airflow component responsible for triggering deferred tasks
+Here are the steps to follow to get this project running:
+1. ### Clone the workshop repo to your local machine.  
+   `$ git clone https://github.com/fletchjeff/duckdb_demo`
 
-2. Verify that all 4 Docker containers were created by running 'docker ps'.
+2. ### Start up the local astro services.  
+    `$ cd duckdb_demo`  
+    `$ astro dev start`
 
-Note: Running 'astro dev start' will start your project with the Airflow Webserver exposed at port 8080 and Postgres exposed at port 5432. If you already have either of those ports allocated, you can either stop your existing Docker containers or change the port.
+3. ### Run the DAGs
+    Once the astro cli start up process has completed, open the Airflow UI at http://localhost:8080/
 
-3. Access the Airflow UI for your local Airflow project. To do so, go to http://localhost:8080/ and log in with 'admin' for both your Username and Password.
+    User: `admin`  
+    Password: `admin`
 
-You should also be able to access your Postgres Database at 'localhost:5432/postgres'.
+    You should see 2 DAGs in the DAGs list, called `1_duckdb_test_dag` and `2_duckdb_process_dag`. Make them both active by clicking the slider next to the name:
 
-Deploy Your Project to Astronomer
-=================================
+    ![airflow ui](images/airflow_ui.png)
 
-If you have an Astronomer account, pushing code to a Deployment on Astronomer is simple. For deploying instructions, refer to Astronomer documentation: https://docs.astronomer.io/cloud/deploy-code/
+    You first need to run the `1_duckdb_test_dag` DAG to create the parquet files used by the second DAG. Click the play button next to the `1_duckdb_test_dag` DAG's name to trigger the DAG run:
 
-Contact
-=======
+    ![start dag](images/airflow_dag_trigger.png)
+    
+    From there you can click the DAG's name and then the Graph icon to see how it ran in the Graph view:
 
-The Astronomer CLI is maintained with love by the Astronomer team. To report a bug or suggest a change, reach out to our support.
+    ![setup](images/airflow_graph.png)

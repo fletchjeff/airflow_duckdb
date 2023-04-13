@@ -7,7 +7,7 @@ from airflow.operators.empty import EmptyOperator
 import pandas, duckdb, time, os
 
 dag = DAG(
-    dag_id="duckdb_tests_dag",
+    dag_id="1_duckdb_tests_dag",
     start_date=datetime(2023, 4, 1),
     schedule=None,
     catchup=False,

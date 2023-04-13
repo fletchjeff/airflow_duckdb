@@ -5,7 +5,7 @@ from airflow.decorators import task
 import pandas, duckdb, os
 
 dag = DAG(
-    dag_id="duckdb_process_dag",
+    dag_id="2_duckdb_process_dag",
     start_date=datetime(2023, 4, 1),
     schedule=None,
     catchup=False,
