@@ -1,6 +1,6 @@
 ## Using DuckDB with Apache Airflow
 
-This repo has the code that goes with [this blog post](https://medium.com/....) on **How to Best Use DuckDB with Apache Airflow**. The blog post contains the important details about the process, this README will show you how to get the project up and running.
+This repo has the code that goes with [this blog post](https://medium.com/apache-airflow/how-to-best-use-duckdb-with-apache-airflow-63a079160d5d) on **How to Best Use DuckDB with Apache Airflow**. The blog post contains the important details about the process, this README will show you how to get the project up and running.
 
 ![blog post](https://unsplash.com/photos/59yg_LpcvzQ/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjgxMzgyNzQ0&force=true&w=1920)
 
