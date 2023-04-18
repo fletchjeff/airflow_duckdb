@@ -24,7 +24,7 @@ with dag:
         conn.sql(f"SET s3_access_key_id='{os.environ['AWS_ACCESS_KEY_ID']}'")
         conn.sql(f"SET s3_secret_access_key='{os.environ['AWS_SECRET_ACCESS_KEY']}'")
         conn.sql("SET s3_region='eu-central-1'")
-        conn.sql(f"CREATE TABLE IF NOT EXISTS all_flights AS SELECT * FROM '{MY_S3_BUCKET}/flights.parquet/*/*/*.parquet'")
+        conn.sql(f"CREATE TABLE IF NOT EXISTS all_flights AS SELECT * FROM '{MY_S3_BUCKET}flights.parquet/*/*/*.parquet'")
         print(conn.sql("SELECT COUNT(*) FROM all_flights").fetchone()[0])
         return local_file_path
 
