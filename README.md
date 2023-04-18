@@ -5,17 +5,27 @@ This repo has the code that goes with [this blog post](https://medium.com/apache
 ![blog post](https://unsplash.com/photos/59yg_LpcvzQ/download?ixid=MnwxMjA3fDB8MXxhbGx8fHx8fHx8fHwxNjgxMzgyNzQ0&force=true&w=1920)
 
 There are some specific prerequisites you need to run this repo:
-1. A Docker Engine. [Docker Desktop](https://www.docker.com) or [Colima](https://github.com/abiosoft/colima) both work with the Astro CLI.
-2. The [Astro CLI](https://docs.astronomer.io/astro/cli/overview)
-3. The data files need to be upload to an S3 (or S3 compliant service like Minio) that you have access to.  
 
-The files needed are hosted on the [transtats site](https://transtats.bts.gov/PREZIP/) and the file names looks like: `On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2002_1.zip`. This is the On Time Reporting data for flights in the US. The `fetch_files.sh` script included in this repo will fetch and unzip the files for 2018 - 2022. Run the script somewhere locally and take a break from doing computer things while it runs. You then need to upload the csv files to a folder on an S3 bucket somewhere.
+* A Docker Engine. [Docker Desktop](https://www.docker.com) or [Colima](https://github.com/abiosoft/colima) both work with the Astro CLI.
+
+* The [Astro CLI](https://docs.astronomer.io/astro/cli/overview)
+
+* The data files need to be upload to an S3 (or S3 compliant service like Minio) that you have access to.  
+
+  The files needed are hosted on the [transtats site](https://transtats.bts.gov/PREZIP/) and the file names looks like: `On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2002_1.zip`. This is the On Time Reporting data for flights in the US. The `fetch_files.sh` script included in this repo will fetch and unzip the files for 2018 - 2022. Run the script somewhere locally and take a break from doing computer things while it runs. You then need to upload the csv files to a folder on an S3 bucket somewhere.
 
 You need to then update the `MY_S3_BUCKET` variable in both DAG files (`dags/duckdb_process_dag.py` and `dags/duckdb_test_dag.py`) with your S3 path. This is near the top of file, so it will be easy to find. Change this line:
 
 > ```MY_S3_BUCKET = 's3://jf-ml-data/flight_data/'```
 
 to you S3 bucket's path. Once that's done, you are good to go. 
+
+You also need to create a file named `.env` file in root of the project folder, with you AWS credentials:
+
+```
+AWS_ACCESS_KEY_ID='AKIAIOSFODNN7EXAMPLE'
+AWS_SECRET_ACCESS_KEY='wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY'
+```
 
 Here are the steps to follow to get this project running:
 1. ### Clone the workshop repo to your local machine.  
@@ -30,6 +40,16 @@ Here are the steps to follow to get this project running:
 
     User: `admin`  
     Password: `admin`
+
+    The first is to create the DuckDB connection. In the UI, go to Admin > Connections and create at DuckDB connection with the following details:
+
+    **Connection Id** : `duck_test`  
+    **Connection Type** : `DuckDB`  
+    **File** : `/tmp/duck_test.db`  
+    
+    ![airflow ui](images/airflow_duckdb_config.png)
+
+    Click Save when you are done. Then go to the main DAGs page.
 
     You should see 2 DAGs in the DAGs list, called `1_duckdb_test_dag` and `2_duckdb_process_dag`. Make them both active by clicking the slider next to the name:
 
