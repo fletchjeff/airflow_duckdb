@@ -1,3 +1,5 @@
+
+
 ## Using DuckDB with Apache Airflow
 
 This repo has the code that goes with [this blog post](https://medium.com/apache-airflow/how-to-best-use-duckdb-with-apache-airflow-63a079160d5d) on **How to Best Use DuckDB with Apache Airflow**. The blog post contains the important details about the process, this README will show you how to get the project up and running.
@@ -14,7 +16,7 @@ There are some specific prerequisites you need to run this repo:
 
   The files needed are hosted on the [transtats site](https://transtats.bts.gov/PREZIP/) and the file names looks like: `On_Time_Reporting_Carrier_On_Time_Performance_1987_present_2002_1.zip`. This is the On Time Reporting data for flights in the US. The `fetch_files.sh` script included in this repo will fetch and unzip the files for 2018 - 2022. Run the script somewhere locally and take a break from doing computer things while it runs. You then need to upload the csv files to a folder on an S3 bucket somewhere.
 
-You need to then update the `MY_S3_BUCKET` variable in both DAG files (`dags/duckdb_process_dag.py` and `dags/duckdb_test_dag.py`) with your S3 path. This is near the top of file, so it will be easy to find. Change this line:
+You need to then update the `MY_S3_BUCKET` variable in both DAG files (`dags/1_duckdb_tests_dag.py` and `dags/2_duckdb_process_dag.py`) with your S3 path. This is near the top of file, so it will be easy to find. Change this line:
 
 > ```MY_S3_BUCKET = 's3://jf-ml-data/flight_data/'```
 
